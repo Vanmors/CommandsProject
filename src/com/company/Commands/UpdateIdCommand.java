@@ -6,6 +6,7 @@ import com.company.data.Flat;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 
 public class UpdateIdCommand implements ICommand, Serializable {
@@ -30,10 +31,11 @@ public class UpdateIdCommand implements ICommand, Serializable {
     public String execute(Stack<Flat> st) {
         String result = "Element changed";
         f.setID(id);
+        CollectionDB collectionDB = new CollectionDB();
+        ArrayList<Flat> list = new ArrayList<>(st);
         try {
-            ArrayList<Flat> list = new ArrayList<>(st);
             if (list.get(id - 1).getUser().equals(user)) {
-                CollectionDB collectionDB = new CollectionDB();
+
                 collectionDB.update(id, list.get(id - 1));
                 list.set(id - 1, f);
                 while (!st.empty()) {

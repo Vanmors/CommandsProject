@@ -8,6 +8,7 @@ import com.company.data.View;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.EmptyStackException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Stack;
@@ -19,10 +20,12 @@ public class AddScriptCommand {
      * @param st   объект коллекции Stack
      * @param file файл со скриптом
      * @throws IOException
+     * @return
      */
-    static void add(Stack<Flat> st, Scanner file, String user) throws IOException {
+    static public String add(Stack<Flat> st, Scanner file, String user) throws IOException {
         while (true) {
             try {
+                int id;
                 String name = setName(file);
                 Coordinates coordinates = setCoordinates(file);
                 int area = setArea(file);
@@ -39,22 +42,27 @@ public class AddScriptCommand {
                         timeToMetro == -1 ||
                         view == null ||
                         house == null) {
-                    System.out.println("Неверно введён скрипт");
+                    return "Неверно введён скрипт";
                 } else {
-                    Flat f = new Flat(st.peek().getId() + 1, name, coordinates, setCreationDate(),
+                    try {
+                        id = st.peek().getId() + 1;
+                    }
+                    catch (EmptyStackException e){
+                        id = 1;
+                    }
+                    Flat f = new Flat(id, name, coordinates, setCreationDate(),
                             area, numberOfRooms, furniture, timeToMetro,
                             view, house, user);
                     CollectionDB collectionDB = new CollectionDB();
                     collectionDB.insertIntoTable(f);
                     st.push(f);
-                    System.out.println("Объект добавлен в коллекцию");
                     break;
                 }
             } catch (NoSuchElementException e) {
-                System.out.println("Неверно введён скрипт");
-                break;
+                return "Неверно введён скрипт";
             }
         }
+        return "Объект добавлен в коллекцию";
     }
 
     /**

@@ -17,7 +17,7 @@ public class HelpCommand implements Serializable, ICommand {
                 "info : output information about the collection (type, initialization date, number of items, etc.) to the standard output stream\n" +
                 "show : output to the standard output stream all the elements of the collection in a string representation\n" +
                 "add {element} : add a new item to the collection\n" +
-                "update id {element} : update the value of a collection item whose id is equal to the specified one\n" +
+                "update_id {element} : update the value of a collection item whose id is equal to the specified one\n" +
                 "clear : delete all collection\n" +
                 "remove_by_id id : delete an item from the collection by its id\n" +
                 "execute_script file_name : read and execute the script from the specified file. The script contains commands in the same form in which they are entered by the user in interactive mode\n" +

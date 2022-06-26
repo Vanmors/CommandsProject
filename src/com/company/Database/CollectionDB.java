@@ -1,10 +1,16 @@
 package com.company.Database;
 
+import com.company.data.Coordinates;
 import com.company.data.Flat;
+import com.company.data.House;
+import com.company.data.View;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Stack;
 
 public class CollectionDB {
 
@@ -52,8 +58,7 @@ public class CollectionDB {
         connection = connectionDB.getConnection();
 
         try {
-            String table = "CREATE TYPE VIEW AS ENUM ('BAD', 'TERRIBLE', 'PARK', 'STREET');" +
-                    "CREATE TABLE IF NOT EXISTS collection(id SERIAL PRIMARY KEY, " +
+            String table ="CREATE TABLE IF NOT EXISTS collection(id serial, " +
                     "Name VARCHAR(200), " +
                     "CoordinateX INTEGER," +
                     "CoordinateY INTEGER," +
@@ -80,8 +85,8 @@ public class CollectionDB {
         try {
             Class.forName("org.postgresql.Driver");
             c = DriverManager
-                    .getConnection("jdbc:postgresql://localhost:5432/postgres",
-                            "postgres", "nav461");
+                    .getConnection("jdbc:postgresql://pg:5432/studs",
+                            "s333887", "nav461");
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -150,10 +155,44 @@ public class CollectionDB {
                 "\'" + flat.getView() + "\'" + "," +
                 "\'" + flat.getHouse().getName() + "\'" + "," +
                 flat.getHouse().getYear() + "," +
-                flat.getHouse().getNumberOfFlatsOnFloor() + "," + "\'" + flat.getUser() + "\'" + ") where id = " + id + ")";
+                flat.getHouse().getNumberOfFlatsOnFloor() + "," + "\'" + flat.getUser() + "\'" + ") where id = " +  "\'" + id + "\'";
 
         statement = connection.createStatement();
         statement.executeUpdate(updateTable);
     }
+    public void parseCommandProject(Stack<Flat> stack) throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet rs = null;
+        CollectionDB connectionDB = new CollectionDB();
 
+        connection = connectionDB.getConnection();
+        try {
+            String table = "SELECT * FROM collection ";
+            statement = connection.createStatement();
+            rs = statement.executeQuery(table);
+
+            while (rs.next()) {
+                Coordinates coordinates = new Coordinates(rs.getInt(3), rs.getLong(4));
+                House house = new House(rs.getString(11), rs.getInt(12), rs.getInt(13));
+                Timestamp t = rs.getTimestamp(5);
+                ZonedDateTime zdt = t.toInstant().atZone(ZoneId.of("Europe/Moscow"));
+                Flat flat = new Flat(rs.getInt(1),
+                        rs.getString(2),
+                        coordinates,
+                        zdt,
+                        rs.getInt(6),
+                        rs.getLong(7),
+                        rs.getBoolean(8),
+                        rs.getLong(9),
+                        View.valueOf((String) rs.getObject(10)),
+                        house,
+                        rs.getString(14));
+                stack.push(flat);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

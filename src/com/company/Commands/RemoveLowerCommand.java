@@ -4,6 +4,7 @@ import com.company.Database.CollectionDB;
 import com.company.data.Flat;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Stack;
@@ -26,13 +27,17 @@ public class RemoveLowerCommand implements ICommand, Serializable {
         if (!st.empty()) {
             while (true) {
                 try {
+                    CollectionDB collectionDB = new CollectionDB();
+                    while (!st.empty()){
+                        st.pop();
+                    }
+                    collectionDB.parseCommandProject(st);
                     ArrayList<Flat> copyOfCollection = new ArrayList<>(st);
                     for (Flat flat : copyOfCollection) {
                         if (flat.getNumberOfRooms() < id) {
                             if (flat.getUser().equals(user)) {
-                                CollectionDB collectionDB = new CollectionDB();
-                                collectionDB.removeObject("DELETE FROM collection WHERE id = " + st.get(flat.getId() - 1));
-                                st.remove(st.get(flat.getId() - 1));
+                                collectionDB.removeObject("DELETE FROM collection WHERE id = " + "\'" + flat.getId() + "\'");
+                                st.remove(flat.getId());
                             }
                             else {
                                 result = "You don't have permission";
@@ -46,7 +51,7 @@ public class RemoveLowerCommand implements ICommand, Serializable {
                         result = "Data entered incorrectly";
                     }
                 }
-                catch (InputMismatchException e){
+                catch (InputMismatchException | SQLException e){
                     result = "Data entered incorrectly";
                 }
             }

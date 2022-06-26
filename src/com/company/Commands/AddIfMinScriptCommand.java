@@ -20,7 +20,7 @@ public class AddIfMinScriptCommand {
      * @param file файл со скриптом
      * @throws IOException
      */
-    static void addIfMinScriptCommand(Stack<Flat> st, Scanner file, String user) throws IOException {
+    static public void addIfMinScriptCommand(Stack<Flat> st, Scanner file, String user) throws IOException {
         while (true) {
             try {
                 String name = setName(file);

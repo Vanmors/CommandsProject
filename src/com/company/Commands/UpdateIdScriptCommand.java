@@ -22,7 +22,7 @@ public class UpdateIdScriptCommand {
      * @param n передаёт массив из названия команды и заданного числа
      * @throws IOException
      */
-    static void updateIdScriptCommand(Stack<Flat> st, Scanner file, String[] n, String user) throws IOException, SQLException {
+    static public void updateIdScriptCommand(Stack<Flat> st, Scanner file, String[] n, String user) throws IOException, SQLException {
         while (true) {
             try {
                 String name = setName(file);

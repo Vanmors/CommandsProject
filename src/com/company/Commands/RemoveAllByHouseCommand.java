@@ -5,6 +5,7 @@ import com.company.data.Flat;
 import com.company.data.House;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Stack;
@@ -29,16 +30,22 @@ public class RemoveAllByHouseCommand implements ICommand, Serializable {
         if (!st.empty()) {
             while(true) {
                 try {
+
+                    CollectionDB collectionDB = new CollectionDB();
+                    while (!st.empty()){
+                        st.pop();
+                    }
+                    collectionDB.parseCommandProject(st);
                     ArrayList<Flat> copyOfCollection = new ArrayList<>(st);
                     for (Flat flat : copyOfCollection) {
                         if (flat.getHouse().getName().equals(h.getName())
                                 && flat.getHouse().getYear().equals(h.getYear())
                                 && flat.getHouse().getNumberOfFlatsOnFloor().equals(h.getNumberOfFlatsOnFloor())) {
                             if (flat.getUser().equals(user)) {
-                                CollectionDB collectionDB = new CollectionDB();
-                                collectionDB.removeObject("DELETE FORM collection WHERE id = " + st.get(flat.getId() - 1));
-                                st.remove(st.get(flat.getId() - 1));
-                                System.out.println("Item removed");
+
+                                collectionDB.removeObject("DELETE FROM collection WHERE id = " + "\'" + flat.getId() + "\'");
+                                st.remove(flat.getId());
+                                result = "Item removed";
                             }
                             else {
                                 result = "You don't have permission";
@@ -47,8 +54,8 @@ public class RemoveAllByHouseCommand implements ICommand, Serializable {
                     }
                     break;
                 }
-                catch (InputMismatchException e){
-                    System.out.println("Data entered incorrectly");
+                catch (InputMismatchException | SQLException e){
+                    result = "Data entered incorrectly";
                 }
             }
         }

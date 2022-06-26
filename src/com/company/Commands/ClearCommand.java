@@ -26,8 +26,8 @@ public class ClearCommand implements Serializable, ICommand {
         ArrayList<Flat> list = new ArrayList<>(st);
 
         for (Flat flat : list) {
-            if (flat.getUser().equals(user)) {
-                userSize += userSize;
+            if (flat.getUser().trim().equals(user.trim())) {
+                userSize += 1;
             }
         }
 

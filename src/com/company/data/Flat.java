@@ -85,12 +85,12 @@ public class Flat implements Serializable {
         String result = String.format("Id: %d\nName: %s\nCoordinates: {x: %d, y: %d}\n" +
                         "Creation Time: %s\nArea: %d\nNumberOfRooms: %d\n" +
                         "Furniture: %b\nTimeToMetroOnFoot: %d\nView: %s\n" +
-                        "Name: %s\nYear: %d\nNumberOfFlatsOnFloor: %d\n",
+                        "Name: %s\nYear: %d\nNumberOfFlatsOnFloor: %d\nUser: %s\n" ,
                 getId(), getName(), getCoordinates().getX(),
                 getCoordinates().getY(), getCreationDate(), getArea(),
                 getNumberOfRooms(), getFurniture(), getTimeToMetroOnFoot(),
                 getView(), getHouse().getName(),
-                getHouse().getYear(), getHouse().getNumberOfFlatsOnFloor());
+                getHouse().getYear(), getHouse().getNumberOfFlatsOnFloor(), getUser());
 //        if(getPostalAddress() == null) result += "Address: null";
 //        else result += String.format("Address: {Street: %s, ZipCode: %s}", getPostalAddress().getStreet(), getPostalAddress().getZipCode());
         return result;
